@@ -16,4 +16,15 @@ func WithNamespace(ns string) CacheOpt {
 	}
 }
 
-// WithPrefix
+func WithTTL(ttl int64) CacheOpt {
+	return func(opt *CacheOption) {
+		opt.TTL = ttl
+	}
+}
+
+// WithKeyGen
+func WithKeyGen(fn func(key interface{}) string) CacheOpt {
+	return func(opt *CacheOption) {
+		opt.KeyGen = fn
+	}
+}

@@ -5,8 +5,9 @@ import (
 )
 
 var (
-	ErrStop  = errors.New("stop")
-	ErrRetry = errors.New("retry")
+	ErrStop           = errors.New("stop")
+	ErrRetry          = errors.New("retry")
+	ErrActionNotFound = errors.New("action not found")
 )
 
 // type errRetry struct {

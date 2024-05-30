@@ -15,6 +15,7 @@ type CacheOption struct {
 	TTL       int64
 	Namespace string
 	Log       *zap.Logger
+	KeyGen    func(key interface{}) string
 }
 
 type CacheOpt func(*CacheOption)
@@ -38,6 +39,7 @@ func New[Key, Value any](redisCli *redis.Client, opts ...CacheOpt) cache.Cache[K
 		namespace: opt.Namespace,
 		ttl:       opt.TTL,
 		log:       opt.Log,
+		keyGen:    opt.KeyGen,
 	}
 }
 
@@ -50,10 +52,14 @@ type redisCache[Key, Value any] struct {
 	ttl       int64
 	namespace string
 	log       *zap.Logger
+	keyGen    func(key interface{}) string
 }
 
 // key
 func (r *redisCache[Key, Value]) key(key Key) string {
+	if r.keyGen != nil {
+		return fmt.Sprintf("%s:%s%s", r.namespace, r.prefix, r.keyGen(key))
+	}
 	return fmt.Sprintf("%s:%s%v", r.namespace, r.prefix, key)
 }
 

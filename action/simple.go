@@ -21,9 +21,8 @@ type HandlerFunc[Action any] func(ctx context.Context, action Action) (any, erro
 
 // init
 func (b *SimpleSet[Action]) init() {
-	if b.handlers == nil {
+	if b.mws == nil {
 		b.mws = make([]Middleware[Action], 0)
-		b.handlers = make(map[reflect.Type][]Handler[Action])
 		b.Use(b.mwReturnAction)
 	}
 }
