@@ -28,3 +28,7 @@ func (l *lruCache[Key, Value]) Update(key Key, val Value, opts ...cache.UpdateOp
 func (l *lruCache[Key, Value]) Clear(key Key) {
 	l.cache.Remove(key)
 }
+
+func (l *lruCache[Key, Value]) Keys() []Key {
+	return l.cache.Keys()
+}
