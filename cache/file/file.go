@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -66,8 +67,8 @@ func (f *FileCache[Key, Value]) load() error {
 	defer file.Close()
 
 	var (
-		key Key
-		val Value
+		key = new(Key)
+		val = new(Value)
 		s   = bufio.NewScanner(file)
 	)
 
@@ -78,83 +79,92 @@ func (f *FileCache[Key, Value]) load() error {
 			continue
 		}
 
-		switch x := any(key).(type) {
+		var (
+			k = reflect.ValueOf(key)
+			v = reflect.ValueOf(val)
+		)
+		k = k.Elem()
+		v = v.Elem()
+
+		switch any(*key).(type) {
 		case string:
-			x = ss[0]
-			_ = x
+			k.SetString(ss[0])
 		case int:
 			i, err := strconv.Atoi(ss[0])
 			if err != nil {
 				continue
 			}
-			x = i
+			k.SetInt(int64(i))
 		case int64:
 			i, err := strconv.ParseInt(ss[0], 10, 64)
 			if err != nil {
 				continue
 			}
-			x = i
+			k.SetInt(i)
 		case int32:
 			i, err := strconv.ParseInt(ss[0], 10, 32)
 			if err != nil {
 				continue
 			}
-			x = int32(i)
+			k.SetInt(int64(i))
 		case float64:
 			i, err := strconv.ParseFloat(ss[0], 64)
 			if err != nil {
 				continue
 			}
-			x = i
+			k.SetFloat(i)
 		default:
 			continue
 		}
 
-		switch x := any(val).(type) {
+		switch any(*val).(type) {
 		case string:
-			x = ss[0]
-			_ = x
+			v.SetString(ss[1])
 		case int:
-			i, err := strconv.Atoi(ss[0])
+			i, err := strconv.Atoi(ss[1])
 			if err != nil {
 				continue
 			}
-			x = i
+			v.SetInt(int64(i))
 		case int64:
-			i, err := strconv.ParseInt(ss[0], 10, 64)
+			i, err := strconv.ParseInt(ss[1], 10, 64)
 			if err != nil {
 				continue
 			}
-			x = i
+			v.SetInt(i)
 		case int32:
-			i, err := strconv.ParseInt(ss[0], 10, 32)
+			i, err := strconv.ParseInt(ss[1], 10, 32)
 			if err != nil {
 				continue
 			}
-			x = int32(i)
+			v.SetInt(int64(i))
 		case float64:
-			i, err := strconv.ParseFloat(ss[0], 64)
+			i, err := strconv.ParseFloat(ss[1], 64)
 			if err != nil {
 				continue
 			}
-			x = i
+			v.SetFloat(i)
 		case bool:
-			i, err := strconv.ParseBool(ss[0])
+			i, err := strconv.ParseBool(ss[1])
 			if err != nil {
 				continue
 			}
-			x = i
+			v.SetBool(i)
 		case time.Time:
-			i, err := time.Parse(time.RFC3339, ss[0])
+			i, err := time.Parse(time.RFC3339, ss[1])
 			if err != nil {
 				continue
 			}
-			x = i
+			v.Set(reflect.ValueOf(i))
 		default:
 			continue
 		}
 
-		f.m.Store(key, val)
+		k1, ok1 := k.Interface().(Key)
+		v1, ok2 := v.Interface().(Value)
+		if ok1 && ok2 {
+			f.m.Store(k1, v1)
+		}
 	}
 
 	return nil
