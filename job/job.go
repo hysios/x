@@ -125,6 +125,9 @@ func (w *Worker) Cron(spec string, jobName string) {
 
 // RegisterJob registers a job
 func (w *Worker) RegisterJob(jobName string, fn interface{}) {
+	if jobName == "" {
+		panic("job name is required")
+	}
 	w.Pool.Job(jobName, fn)
 }
 
