@@ -1,4 +1,6 @@
 cloud.google.com/go v0.26.0/go.mod h1:aQUYkXzVsufM+DwF1aE+0xfcU+56JwCaLick0ClmMTw=
+dario.cat/mergo v1.0.0 h1:AGCNq9Evsj31mOgNPcLyXc+4PNABt905YmuqPYYpBWk=
+dario.cat/mergo v1.0.0/go.mod h1:uNxQE+84aUszobStD9th8a29P2fMDhsBdgRYvZOxGmk=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20210715213245-6c3934b029d8 h1:V8krnnfGj4pV65YLUm3C0/8bl7V5Nry2Pwvy3ru/wLc=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20210715213245-6c3934b029d8/go.mod h1:CzsSbkDixRphAF5hS6wbMKq0eI6ccJRb7/A0M6JBnwg=
 github.com/Azure/go-ansiterm v0.0.0-20160425224146-04b7f292a41f/go.mod h1:LmzpDX56iTiv29bbRTIsUNlaFfuhWRQBWjQdVyAevI8=
@@ -218,6 +220,8 @@ github.com/hashicorp/hcl v1.0.0/go.mod h1:E5yfLk+7swimpb2L/Alb/PJmXilQ/rhwaUYs4T
 github.com/hashicorp/raft v1.3.1 h1:zDT8ke8y2aP4wf9zPTB2uSIeavJ3Hx/ceY4jxI2JxuY=
 github.com/hashicorp/raft v1.3.1/go.mod h1:4Ak7FSPnuvmb0GV6vgIAJ4vYT4bek9bb6Q+7HVbyzqM=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
+github.com/hysios/go-dexec v0.0.0-20240512063548-b44f800be330 h1:yjEd3lbHcIOMRujXRV/o2rgXF2AyLM8auWmn7BPXMJI=
+github.com/hysios/go-dexec v0.0.0-20240512063548-b44f800be330/go.mod h1:ABGvQ3XH5ys4TiZRIPjlzyS7sp0bvGklRlm1tyZmYo8=
 github.com/hysios/gorm-zap v0.0.1 h1:gfIU6Q42vJkQs+ReyP3H25K7P24Ulu+geWHsyWVkZxc=
 github.com/hysios/gorm-zap v0.0.1/go.mod h1:FHBzhZY0vljwIfkE1R5aeEJXuWd2E/qSX7oY0cIO+kg=
 github.com/hysios/log v0.0.1 h1:3meIyXznlF/J3wHziMk7Aj/6W7CpybkliIP031pAUYc=
