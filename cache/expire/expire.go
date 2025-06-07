@@ -37,3 +37,17 @@ func (l *expireCache[Key, Value]) Clear(key Key) {
 func (l *expireCache[Key, Value]) Keys() []Key {
 	return l.cache.Keys()
 }
+
+func (l *expireCache[Key, Value]) Range(fn func(k Key, v Value) bool) {
+	keys := l.cache.Keys()
+	for _, key := range keys {
+		val, ok := l.cache.Get(key)
+		if !ok {
+			continue
+		}
+
+		if !fn(key, val) {
+			break
+		}
+	}
+}
