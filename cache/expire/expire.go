@@ -41,7 +41,7 @@ func (l *expireCache[Key, Value]) Keys() []Key {
 func (l *expireCache[Key, Value]) Range(fn func(k Key, v Value) bool) {
 	keys := l.cache.Keys()
 	for _, key := range keys {
-		val, ok := l.cache.Get(key)
+		val, ok := l.cache.Peek(key)
 		if !ok {
 			continue
 		}
