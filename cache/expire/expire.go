@@ -51,3 +51,8 @@ func (l *expireCache[Key, Value]) Range(fn func(k Key, v Value) bool) {
 		}
 	}
 }
+
+// Size
+func (l *expireCache[Key, Value]) Size() int {
+	return l.cache.Len()
+}
