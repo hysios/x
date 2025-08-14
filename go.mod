@@ -3,7 +3,6 @@ module github.com/hysios/x
 go 1.21
 
 require (
-	dario.cat/mergo v1.0.0
 	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/ThreeDotsLabs/watermill v1.3.5
 	github.com/ThreeDotsLabs/watermill-amqp/v2 v2.1.1
