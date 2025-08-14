@@ -4,18 +4,17 @@ import (
 	"context"
 	"time"
 
-	"dario.cat/mergo"
 	"github.com/hysios/x/mq"
 	"github.com/mitchellh/mapstructure"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
 type Config struct {
-	URL            string
-	ExchangeName   string
-	QueueName      string
-	PublishTimeout time.Duration
-	Durable        bool
+	URL            string        `mapstructure:"url"`
+	ExchangeName   string        `mapstructure:"exchange_name"`
+	QueueName      string        `mapstructure:"queue_name"`
+	PublishTimeout time.Duration `mapstructure:"publish_timeout"`
+	Durable        bool          `mapstructure:"durable"`
 }
 
 type amqpDriver struct {
@@ -230,19 +229,53 @@ func (m *message) Ack() bool {
 func init() {
 	mq.Register("amqp", func(c mq.Config) mq.Driver {
 		var cfg Config
-		if err := mapstructure.Decode(c, &cfg); err != nil {
+
+		// 配置 mapstructure 解码器以支持 time.Duration
+		decoderConfig := &mapstructure.DecoderConfig{
+			DecodeHook: mapstructure.StringToTimeDurationHookFunc(),
+			Result:     &cfg,
+		}
+		decoder, err := mapstructure.NewDecoder(decoderConfig)
+		if err != nil {
 			panic(err)
 		}
 
-		if err := mergo.Map(&cfg, DefaultConfig, mergo.WithOverride); err != nil {
+		if err := decoder.Decode(c); err != nil {
 			panic(err)
 		}
 
-		driver, err := Open(cfg)
+		// 手动合并配置，确保用户配置能够覆盖默认配置，包括零值
+		dst := mergeConfigs(DefaultConfig, cfg, c)
+
+		driver, err := Open(dst)
 		if err != nil {
 			panic(err)
 		}
 
 		return driver
 	})
+}
+
+// mergeConfigs 手动合并配置，确保用户设置的零值能够覆盖默认值
+func mergeConfigs(defaultCfg, userCfg Config, rawConfig mq.Config) Config {
+	result := defaultCfg
+
+	// 检查原始配置中是否明确设置了字段，如果设置了就使用用户配置的值（包括零值）
+	if _, exists := rawConfig["url"]; exists {
+		result.URL = userCfg.URL
+	}
+	if _, exists := rawConfig["exchange_name"]; exists {
+		result.ExchangeName = userCfg.ExchangeName
+	}
+	if _, exists := rawConfig["queue_name"]; exists {
+		result.QueueName = userCfg.QueueName
+	}
+	if _, exists := rawConfig["publish_timeout"]; exists {
+		result.PublishTimeout = userCfg.PublishTimeout
+	}
+	if _, exists := rawConfig["durable"]; exists {
+		result.Durable = userCfg.Durable
+	}
+
+	return result
 }
