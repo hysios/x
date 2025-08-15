@@ -260,6 +260,11 @@ func init() {
 func mergeConfigs(defaultCfg, userCfg Config, rawConfig mq.Config) Config {
 	result := defaultCfg
 
+	// 如果 rawConfig 为 nil，直接返回默认配置
+	if rawConfig == nil {
+		return result
+	}
+
 	// 检查原始配置中是否明确设置了字段，如果设置了就使用用户配置的值（包括零值）
 	if _, exists := rawConfig["url"]; exists {
 		result.URL = userCfg.URL
